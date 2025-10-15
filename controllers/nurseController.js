@@ -200,3 +200,38 @@ export const deleteNurse = async (req, res) => {
     }
 };
 
+// @desc    Search nurses by name or license number
+// @route   GET /api/nurses/search?q=searchTerm
+// @access  Public
+export const searchNurses = async (req, res) => {
+    try {
+        const { q } = req.query;
+
+        if (!q || q.trim() === '') {
+            // If no search term, return all nurses
+            const nurses = await Nurse.findAll();
+            return res.json({
+                success: true,
+                count: nurses.length,
+                data: nurses
+            });
+        }
+
+        const nurses = await Nurse.search(q.trim());
+
+        res.json({
+            success: true,
+            count: nurses.length,
+            data: nurses,
+            searchTerm: q.trim()
+        });
+    } catch (error) {
+        console.error('Error searching nurses:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Error searching nurses',
+            error: error.message
+        });
+    }
+};
+

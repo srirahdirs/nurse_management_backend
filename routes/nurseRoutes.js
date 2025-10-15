@@ -4,10 +4,14 @@ import {
     getNurseById,
     createNurse,
     updateNurse,
-    deleteNurse
+    deleteNurse,
+    searchNurses
 } from '../controllers/nurseController.js';
 
 const router = express.Router();
+
+// GET /api/nurses/search - Search nurses (must be before /:id route)
+router.get('/search', searchNurses);
 
 // GET /api/nurses - Get all nurses
 router.get('/', getAllNurses);

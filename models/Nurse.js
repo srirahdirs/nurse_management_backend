@@ -65,6 +65,18 @@ class Nurse {
         const [result] = await pool.query('DELETE FROM nurses WHERE id = ?', [id]);
         return result.affectedRows > 0;
     }
+
+    // Search nurses by name or license number
+    static async search(searchTerm) {
+        const searchPattern = `%${searchTerm}%`;
+        const [nurses] = await pool.query(
+            `SELECT * FROM nurses 
+             WHERE name LIKE ? OR license_number LIKE ? 
+             ORDER BY created_at DESC`,
+            [searchPattern, searchPattern]
+        );
+        return nurses;
+    }
 }
 
 export default Nurse;
